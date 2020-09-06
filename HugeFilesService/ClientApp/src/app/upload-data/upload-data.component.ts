@@ -1,24 +1,37 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+// See example here: https://stackoverflow.com/questions/60182054/upload-large-files-using-angular-8-and-net-core-web-api
+import { Component } from '@angular/core';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-fetch-data',
-  templateUrl: './fetch-data.component.html'
+  selector: 'app-upload-data',
+  templateUrl: './upload-data.component.html',
 })
+export class UploadDataComponent {
+  public progress: number;
+  public message: string;
+  constructor(private http: HttpClient) { }
 
-export class FetchDataComponent {
-  public forecasts: WeatherForecast[];
+  upload(files) {
+    if (files.length === 0) {
+      return;
+    }
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<WeatherForecast[]>(baseUrl + 'api/SampleData/WeatherForecasts').subscribe(result => {
-      this.forecasts = result;
-    }, error => console.error(error));
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append(file.name, file);
+    }
+
+    const uploadReq = new HttpRequest('POST', `api/UploadData`, formData, {
+      reportProgress: true,
+    });
+
+    this.http.request(uploadReq).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        this.progress = Math.round(100 * event.loaded / event.total);
+      } else if (event.type === HttpEventType.Response) {
+        this.message = event.body.toString();
+      }
+    });
   }
-}
-
-interface WeatherForecast {
-  dateFormatted: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
 }

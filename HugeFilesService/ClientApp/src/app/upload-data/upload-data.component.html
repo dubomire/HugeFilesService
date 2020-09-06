@@ -1,24 +1,15 @@
 <h1>Weather forecast</h1>
 
-<p>This component demonstrates uploading data from the server.</p>
+<p>This component demonstrates uploading multipart/form-data data to the server.</p>
 
-<p *ngIf="!forecasts"><em>Loading...</em></p>
+<input #file type="file" multiple (change)="upload(file.files)" />
+<br />
+<span style="font-weight:bold;color:green;" *ngIf="progress > 0 && progress < 100">
+  {{progress}}%
+</span>
 
-<table class='table' *ngIf="forecasts">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Temp. (C)</th>
-      <th>Temp. (F)</th>
-      <th>Summary</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let forecast of forecasts">
-      <td>{{ forecast.dateFormatted }}</td>
-      <td>{{ forecast.temperatureC }}</td>
-      <td>{{ forecast.temperatureF }}</td>
-      <td>{{ forecast.summary }}</td>
-    </tr>
-  </tbody>
-</table>
+<span style="font-weight:bold;color:green;" *ngIf="message">
+  {{message}}
+</span>
+
+<p><progress showValue="true" type="success" value={{progress}} max="100"></progress></p>
