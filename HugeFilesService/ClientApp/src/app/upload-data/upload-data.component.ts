@@ -22,7 +22,7 @@ export class UploadDataComponent {
       formData.append(file.name, file);
     }
 
-    const uploadReq = new HttpRequest('POST', `api/UploadData`, formData, {
+    const uploadReq = new HttpRequest('POST', `api/UploadData/UploadPhysical`, formData, {
       reportProgress: true,
     });
 
