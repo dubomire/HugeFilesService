@@ -26,7 +26,7 @@ namespace HugeFilesService.Controllers
 
         private string targetFilePath = "storage/";
         private string[] permittedExtensions = { ".rar", ".7zip", ".txt" };
-        private int fileSizeLimit = 100000;
+        private long fileSizeLimit = 10000000000;
 
         public UploadDataController([FromServices] ILogger<UploadDataController> logger)
         {
