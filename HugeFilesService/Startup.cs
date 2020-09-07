@@ -1,6 +1,7 @@
 using HugeFilesService.Utils.Attributes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -22,28 +23,12 @@ namespace HugeFilesService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                .AddRazorPagesOptions(options =>
-                {
-                    options.Conventions
-                        .AddPageApplicationModelConvention("/StreamedSingleFileUploadDb",
-                            model =>
-                            {
-                                model.Filters.Add(
-                                    new GenerateAntiforgeryTokenCookieAttribute());
-                                model.Filters.Add(
-                                    new DisableFormValueModelBindingAttribute());
-                            });
-                    options.Conventions
-                        .AddPageApplicationModelConvention("/StreamedSingleFileUploadPhysical",
-                            model =>
-                            {
-                                model.Filters.Add(
-                                    new GenerateAntiforgeryTokenCookieAttribute());
-                                model.Filters.Add(
-                                    new DisableFormValueModelBindingAttribute());
-                            });
-                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
+            services.Configure<FormOptions>(x =>
+            {
+                x.MultipartBodyLengthLimit = 209715200;
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

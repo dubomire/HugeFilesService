@@ -1,0 +1,15 @@
+<h1>Upload data file</h1>
+
+<p>This component demonstrates uploading multipart/form-data data to the server.</p>
+
+<input #file type="file" multiple (change)="upload(file.files)" />
+<br />
+<span style="font-weight:bold;color:green;" *ngIf="progress > 0 && progress < 100">
+  {{progress}}%
+</span>
+
+<span style="font-weight:bold;color:green;" *ngIf="message">
+  {{message}}
+</span>
+
+<p><progress showValue="true" type="success" value={{progress}} max="100"></progress></p>

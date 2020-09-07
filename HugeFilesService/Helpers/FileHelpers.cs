@@ -56,6 +56,11 @@ namespace HugeFilesService.Helpers
                     new byte[] { 0x57, 0x69, 0x6E, 0x5A, 0x69, 0x70 },
                 }
             },
+            { ".rar", new List<byte[]>
+                {
+                    new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00}
+                }
+            },
         };
 
         // **WARNING!**

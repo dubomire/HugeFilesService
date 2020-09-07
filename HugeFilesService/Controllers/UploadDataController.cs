@@ -1,19 +1,16 @@
 ﻿// https://jonlabelle.com/snippets/view/csharp/upload-files-in-aspnet-core
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using HugeFilesService.Helpers;
 using HugeFilesService.Utils;
 using HugeFilesService.Utils.Attributes;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using FormOptions = Microsoft.AspNetCore.Http.Features.FormOptions;
 
 namespace HugeFilesService.Controllers
 {
@@ -22,23 +19,23 @@ namespace HugeFilesService.Controllers
     {
         private FormOptions defaultFormOptions = new FormOptions
         {
-            MultipartBoundaryLengthLimit = 20202020
+            MultipartBoundaryLengthLimit = int.MaxValue-1
         };
 
         private ILogger<UploadDataController> logger;
 
-        private string targetFilePath = "";
-        private string[] permittedExtensions = { "txt" };
-        private int fileSizeLimit = 100000;
+        private string targetFilePath = "storage/";
+        private string[] permittedExtensions = { ".rar", ".7zip", ".txt" };
+        private long fileSizeLimit = 10000000000;
 
         public UploadDataController([FromServices] ILogger<UploadDataController> logger)
         {
             this.logger = logger;
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         [DisableFormValueModelBinding]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadPhysical()
         {
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
@@ -105,7 +102,7 @@ namespace HugeFilesService.Controllers
                         }
 
                         using (var targetStream = System.IO.File.Create(
-                            Path.Combine(targetFilePath, trustedFileNameForFileStorage)))
+                            Path.Combine(targetFilePath, trustedFileNameForDisplay)))
                         {
                             await targetStream.WriteAsync(streamedFileContent);
 
